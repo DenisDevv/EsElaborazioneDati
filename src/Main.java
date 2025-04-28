@@ -66,7 +66,7 @@ public class Main {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
             writer.write("Regione;Percentuale Media\n");
             for (ReportRegione entry : report) {
-                writer.write(entry.getRegione() + ";" + String.format(Locale.US, "%.2f", entry.getMediaPercentuale()) + "\n");
+                writer.write(entry.getRegione() + ";" + entry.getMediaPercentuale() + "\n");
             }
         }
     }
