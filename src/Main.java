@@ -6,13 +6,16 @@ public class Main {
     public static void main(String[] args) {
         String inputFilePath = "src/Grado-diffusione-del-PC-nelle-imprese-con-meno-di-10-addetti.csv";
         String outputFilePath = "src/report.csv";
+        String outputFilePathHTML = "src/report.html";
 
         try {
             List<DiffusionePC> dati = caricaDatiDaCSV(inputFilePath);
             List<ReportRegione> report = creaReportPerRegione(dati);
             salvaReportInCSV(report, outputFilePath);
-
+            salvaReportInHTML(report, outputFilePathHTML);
             System.out.println("Report generato con successo in: " + outputFilePath);
+
+            System.out.println("Report generato con successo in: " + outputFilePathHTML);
         } catch (IOException e) {
             System.err.println("Errore durante l'elaborazione dei dati: " + e.getMessage());
         }
@@ -68,6 +71,27 @@ public class Main {
             for (ReportRegione entry : report) {
                 writer.write(entry.getRegione() + ";" + entry.getMediaPercentuale() + "\n");
             }
+        }
+    }
+
+    private static void salvaReportInHTML(List<ReportRegione> report, String filePath) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath))) {
+            writer.write("<!DOCTYPE html>\n");
+            writer.write("<html>\n");
+            writer.write("<head>\n");
+            writer.write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
+            writer.write("<title>Report Grado-diffusione del PC</title>\n");
+            writer.write("</head>\n");
+            writer.write("<body style='font-family: Arial'>\n");
+            writer.write("<h1>Grado-diffusione del PC</h1>\n");
+            writer.write("<h2>Report per Regione</h2>\n");
+            writer.write("<ul>\n");
+            for (ReportRegione entry : report) {
+                writer.write("<li>" + entry.getRegione() + ": " + Math.floor(entry.getMediaPercentuale()) + "%</li>\n");
+            }
+            writer.write("</ul>\n");
+            writer.write("</body>\n");
+            writer.write("</html>");
         }
     }
 }
